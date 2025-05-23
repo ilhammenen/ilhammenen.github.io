@@ -1,31 +1,70 @@
-// Import jQuery and Typed.js
-const $ = require("jquery")
-const Typed = require("typed.js")
+// Standard browser-compatible JavaScript
+const $ = window.$ // Declare the $ variable
+const Typed = window.Typed // Declare the Typed variable
 
 $(document).ready(() => {
   // Current year for copyright
   $("#currentYear").text(new Date().getFullYear())
 
-  // Typed.js for rotating text
-  new Typed(".text-rotate", {
-    strings: [
-      "I build amazing web experiences.",
-      "I create beautiful user interfaces.",
-      "I develop modern applications.",
-      "I bring ideas to life.",
-    ],
-    typeSpeed: 50,
-    backSpeed: 30,
-    backDelay: 2000,
-    startDelay: 1000,
-    loop: true,
+  // Typed.js for rotating text (only if Typed is available)
+  if (typeof Typed !== "undefined") {
+    new Typed(".text-rotate", {
+      strings: [
+        "I build amazing web experiences.",
+        "I create beautiful user interfaces.",
+        "I develop modern applications.",
+        "I bring ideas to life.",
+      ],
+      typeSpeed: 50,
+      backSpeed: 30,
+      backDelay: 2000,
+      startDelay: 1000,
+      loop: true,
+    })
+  }
+
+  // Mobile menu toggle - FIXED VERSION
+  $(".menu-toggle").on("click", function (e) {
+    e.preventDefault()
+    e.stopPropagation()
+
+    console.log("Menu button clicked!") // Debug log
+
+    const $navLinks = $(".nav-links")
+    const $icon = $(this).find("i")
+    const isActive = $navLinks.hasClass("active")
+
+    if (isActive) {
+      // Close menu
+      $navLinks.removeClass("active")
+      $(this).attr("aria-expanded", "false")
+      $icon.removeClass("fa-times").addClass("fa-bars")
+      $("body").removeClass("menu-open")
+    } else {
+      // Open menu
+      $navLinks.addClass("active")
+      $(this).attr("aria-expanded", "true")
+      $icon.removeClass("fa-bars").addClass("fa-times")
+      $("body").addClass("menu-open")
+    }
   })
 
-  // Mobile menu toggle
-  $(".menu-toggle").click(function () {
-    const expanded = $(this).attr("aria-expanded") === "true" || false
-    $(this).attr("aria-expanded", !expanded)
-    $(".nav-links").toggleClass("active")
+  // Close mobile menu when clicking outside
+  $(document).on("click", (e) => {
+    if (!$(e.target).closest(".navbar").length) {
+      $(".nav-links").removeClass("active")
+      $(".menu-toggle").attr("aria-expanded", "false")
+      $(".menu-toggle i").removeClass("fa-times").addClass("fa-bars")
+      $("body").removeClass("menu-open")
+    }
+  })
+
+  // Close mobile menu when clicking on nav links
+  $(".nav-links a").on("click", () => {
+    $(".nav-links").removeClass("active")
+    $(".menu-toggle").attr("aria-expanded", "false")
+    $(".menu-toggle i").removeClass("fa-times").addClass("fa-bars")
+    $("body").removeClass("menu-open")
   })
 
   // Smooth scrolling for navigation links
@@ -35,17 +74,21 @@ $(document).ready(() => {
     var target = this.hash
     var $target = $(target)
 
-    // Update aria-current for navigation
-    $(".nav-links a").attr("aria-current", null)
-    $('.nav-links a[href="' + target + '"]').attr("aria-current", "page")
+    if ($target.length) {
+      // Update aria-current for navigation
+      $(".nav-links a").removeClass("active").removeAttr("aria-current")
+      $('.nav-links a[href="' + target + '"]')
+        .addClass("active")
+        .attr("aria-current", "page")
 
-    $("html, body").animate(
-      {
-        scrollTop: $target.offset().top - 70,
-      },
-      800,
-      "swing",
-    )
+      $("html, body").animate(
+        {
+          scrollTop: $target.offset().top - 70,
+        },
+        800,
+        "swing",
+      )
+    }
   })
 
   // Active navigation based on scroll position
@@ -59,7 +102,7 @@ $(document).ready(() => {
       var sectionId = $(this).attr("id")
 
       if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
-        $(".nav-links a").removeClass("active").attr("aria-current", null)
+        $(".nav-links a").removeClass("active").removeAttr("aria-current")
         $('.nav-links a[href="#' + sectionId + '"]')
           .addClass("active")
           .attr("aria-current", "page")
@@ -117,8 +160,8 @@ $(document).ready(() => {
     var message = $("#message").val()
 
     // Basic validation
-    let isValid = true
-    let errorMessage = ""
+    var isValid = true
+    var errorMessage = ""
 
     if (!name.trim()) {
       isValid = false
@@ -146,17 +189,10 @@ $(document).ready(() => {
 
     // If valid, submit the form (or show success message)
     if (isValid) {
-      // Here you would typically send the form data to a server
-      // For demonstration, we'll just show an alert
       alert("Thanks for your message, " + name + "! I'll get back to you soon.")
-
-      // Reset form
       this.reset()
-
-      // Reset aria states
       $("#name, #email, #message").attr("aria-invalid", "false")
     } else {
-      // Show error message
       alert("Please correct the following errors: " + errorMessage)
     }
   })

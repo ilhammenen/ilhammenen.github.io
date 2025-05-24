@@ -13,14 +13,20 @@
 <body>
     <!-- Skip to content link for accessibility -->
     <a href="#main-content" class="skip-link">Skip to content</a>
-    
+    <!-- Theme Toggle Button -->
+<button class="theme-toggle" aria-label="Switch to dark mode">
+    <i class="fas fa-moon"></i>
+</button>
     <!-- Navigation -->
     <nav class="navbar" role="navigation" aria-label="Main navigation">
         <div class="container">
             <div class="navbar-content">
-                <div class="logo">ILHAM RAMLI</div>
+                <div><a href="#home" class="logo">ILHAM RAMLI</a></div>
                 <ul class="nav-links">
-                    <li><a href="#home" class="active" aria-current="page"><i class="fas fa-home" aria-hidden="true"></i> Home</a></li>
+                    <li><a href="#home" class="active" 
+                        aria-current="page">
+                        <i class="fas fa-home" aria-hidden="true">
+                        </i> Home</a></li>
                     <li><a href="#about"><i class="fas fa-user" aria-hidden="true"></i> About</a></li>
                     <li><a href="#academic"><i class="fas fa-graduation-cap" aria-hidden="true"></i> Academic</a></li>
                     <li><a href="#projects"><i class="fas fa-briefcase" aria-hidden="true"></i> Projects</a></li>
@@ -38,7 +44,7 @@
     <section id="home" class="hero" aria-label="Introduction">
         <div class="video-bg">
             <video autoplay loop muted playsinline aria-hidden="true">
-                <source src="0524 (1).mp4" type="video/mp4">
+                <source src="0524 (1).mp4" type="video/mp4" style="opacity: 100;">
             </video>
             <div class="overlay"></div>
         </div>
@@ -54,7 +60,7 @@
                 </p>
                 <div class="cta-buttons">
                     <a href="#projects" class="btn btn-primary">View My Work</a>
-                    <a href="#contact" class="btn btn-outline">Contact Me</a>
+                    <a href="#contact" style ="color :aliceblue" class ="btn btn-outline">Contact Me</a>
                 </div>
             </div>
             <div class="scroll-down">
@@ -76,8 +82,9 @@
                 </p>
             </div>
             <div class="about-content">
-                <div class="about-image">
-                    <img src="showing (1).jpeg" alt="Ilham Ramli - Professional portrait" style="display: block; margin: 0 auto;">
+                <div> 
+                    <img src="showing (1).png" alt="Ilham Ramli - Professional portrait"
+                     style="display: block; margin: 0 auto; box-shadow: 5px 3px 10px rgba(139, 139, 139, 0.5); ">
                 </div>
                 <div class="about-text">
                     <h3>Who am I?</h3>
@@ -85,8 +92,8 @@
                     <p>
                         Hello! I'm Ilham, a passionate Network Specialist, Interior Designer, and Web Designer. 
                         I blend technical skill with creative vision to build strong connections, both in
-                         networks and in design. 
-                         <p></p>
+                         networks and in design. <br><br>
+                         
                          Whether I’m optimizing systems, crafting spaces, or designing 
                          websites, I focus on smart, functional, and beautiful solutions. .
                     </p>

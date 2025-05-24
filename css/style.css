@@ -996,15 +996,219 @@ section {
   top: 0;
 }
 
-/* Animations */
+/* ========================================
+   SCROLL DOWN ANIMATIONS - CSS KEYFRAMES
+   ======================================== */
+
+/* Base animation classes that get added by JavaScript */
+.fadeInUp {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+  animation: fadeInUp 0.8s ease forwards;
+}
+
+.slideInLeft {
+  opacity: 1 !important;
+  transform: translateX(0) !important;
+  animation: slideInLeft 0.6s ease forwards;
+}
+
+.slideInRight {
+  opacity: 1 !important;
+  transform: translateX(0) !important;
+  animation: slideInRight 0.6s ease forwards;
+}
+
+.slideInDown {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+  animation: slideInDown 0.8s ease forwards;
+}
+
+.slideInUp {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+  animation: slideInUp 0.8s ease forwards;
+}
+
+.bounceIn {
+  opacity: 1 !important;
+  transform: scale(1) !important;
+  animation: bounceIn 0.6s ease forwards;
+}
+
+.bounceInUp {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+  animation: bounceInUp 0.8s ease forwards;
+}
+
+.zoomIn {
+  opacity: 1 !important;
+  transform: scale(1) !important;
+  animation: zoomIn 0.8s ease forwards;
+}
+
+.fadeIn {
+  opacity: 1 !important;
+  animation: fadeIn 0.8s ease forwards;
+}
+
+.rotateIn {
+  opacity: 1 !important;
+  transform: rotate(0deg) !important;
+  animation: rotateIn 0.8s ease forwards;
+}
+
+/* Initial states for elements before animation */
+.about-image,
+.about-text,
+.timeline-item,
+.cert-card,
+.project-card,
+.skill-card,
+.contact-info,
+.contact-form {
+  opacity: 0;
+  transform: translateY(50px);
+  transition: all 0.8s ease;
+}
+
+.achievements ul li,
+.timeline-meta span {
+  opacity: 0;
+  transform: translateX(-30px);
+  transition: all 0.6s ease;
+}
+
+.tags span,
+.project-tags span,
+.skill-tags span {
+  opacity: 0;
+  transform: scale(0.8);
+  transition: all 0.6s ease;
+}
+
+/* Keyframe Animations */
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(50px);
   }
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes bounceInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(100px);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(-10px);
+  }
+  80% {
+    transform: translateY(5px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes rotateIn {
+  from {
+    opacity: 0;
+    transform: rotate(-200deg);
+  }
+  to {
+    opacity: 1;
+    transform: rotate(0deg);
   }
 }
 
@@ -1056,14 +1260,38 @@ section {
     padding: 20px;
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
     gap: 10px;
+    z-index: 999; /* Ensure it's above other content */
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
   }
 
   .nav-links.active {
     display: flex;
+    transform: translateX(0);
   }
 
   .menu-toggle {
     display: block;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    z-index: 1001; /* Above the menu */
+  }
+
+  .menu-toggle:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+  }
+
+  /* Ensure menu button is always visible */
+  .navbar {
+    z-index: 1000;
+  }
+
+  /* Prevent body scroll when menu is open */
+  body.menu-open {
+    overflow: hidden;
   }
 
   .name {
@@ -1146,4 +1374,3 @@ section {
     scroll-behavior: auto !important;
   }
 }
-

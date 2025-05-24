@@ -120,125 +120,92 @@ $(document).ready(() => {
   })
 
   // ========================================
-  // SCROLL DOWN ANIMATIONS - THIS IS WHERE THE MAGIC HAPPENS!
+  // FIXED SCROLL ANIMATIONS - BOTTOM TO TOP
   // ========================================
 
-  // Enhanced scroll animations with more options
+  function isElementInViewport(element, offset = 100) {
+    const rect = element.getBoundingClientRect()
+    const windowHeight = window.innerHeight || document.documentElement.clientHeight
+
+    return rect.top <= windowHeight - offset && rect.bottom >= 0
+  }
+
   function animateOnScroll() {
-    // Animate section titles and subtitles
-    $(".section-title, .section-subtitle, .underline").each(function () {
-      var elementPosition = $(this).offset().top
-      var topOfWindow = $(window).scrollTop()
-      var windowHeight = $(window).height()
-      var triggerPoint = 100 // How many pixels before element comes into view
+    // Elements to animate
+    const elementsToAnimate = [
+      ".section-header",
+      ".about-content .about-image",
+      ".about-content .about-text",
+      ".timeline-item",
+      ".cert-card",
+      ".project-card",
+      ".skill-card",
+      ".contact-info",
+      ".contact-form",
+    ]
 
-      if (elementPosition < topOfWindow + windowHeight - triggerPoint) {
-        $(this).addClass("animated")
-      }
+    elementsToAnimate.forEach((selector) => {
+      $(selector).each(function (index) {
+        
+
+        if (isElementInViewport(this, 150)) {
+          // Add a small delay for staggered effect
+          setTimeout(() => {
+            $(this).addClass("animate")
+          }, index * 100) // 100ms delay between each element
+        }
+      })
     })
 
-    // Animate content elements with staggered delays
-    $(
-      ".about-image, .about-text, .timeline-item, .cert-card, .project-card, .skill-card, .contact-info, .contact-form",
-    ).each(function (index) {
-      var elementPosition = $(this).offset().top
-      var topOfWindow = $(window).scrollTop()
-      var windowHeight = $(window).height()
-      var triggerPoint = 150 // Trigger animation 150px before element is visible
-
-      if (elementPosition < topOfWindow + windowHeight - triggerPoint) {
-        // Add staggered delay based on element index
-        var delay = index * 100 // 100ms delay between each element
-
+    // Special handling for grids (projects, skills, certs)
+    $(".projects-grid .project-card").each(function (index) {
+      if (isElementInViewport(this, 150)) {
         setTimeout(() => {
-          $(this).addClass("fadeInUp")
-        }, delay)
+          $(this).addClass("animate")
+        }, index * 150)
       }
     })
 
-    // Animate individual list items with delays
-    $(".achievements ul li, .timeline-meta span").each(function (index) {
-      var elementPosition = $(this).offset().top
-      var topOfWindow = $(window).scrollTop()
-      var windowHeight = $(window).height()
-
-      if (elementPosition < topOfWindow + windowHeight - 100) {
+    $(".skills-grid .skill-card").each(function (index) {
+      if (isElementInViewport(this, 150)) {
         setTimeout(() => {
-          $(this).addClass("slideInLeft")
-        }, index * 50) // 50ms delay between each item
+          $(this).addClass("animate")
+        }, index * 100)
       }
     })
 
-    // Animate tags with bounce effect
-    $(".tags span, .project-tags span, .skill-tags span").each(function (index) {
-      var elementPosition = $(this).offset().top
-      var topOfWindow = $(window).scrollTop()
-      var windowHeight = $(window).height()
-
-      if (elementPosition < topOfWindow + windowHeight - 50) {
+    $(".cert-container .cert-card").each(function (index) {
+      if (isElementInViewport(this, 150)) {
         setTimeout(() => {
-          $(this).addClass("bounceIn")
-        }, index * 30) // 30ms delay between each tag
-      }
-    })
-
-    // Animate progress bars or counters (if you want to add them)
-    $(".progress-bar").each(function () {
-      var elementPosition = $(this).offset().top
-      var topOfWindow = $(window).scrollTop()
-      var windowHeight = $(window).height()
-
-      if (elementPosition < topOfWindow + windowHeight - 100) {
-        var percentage = $(this).data("percentage") || 90
-        $(this)
-          .css("width", percentage + "%")
-          .addClass("animated")
+          $(this).addClass("animate")
+        }, index * 200)
       }
     })
   }
 
-  // Enhanced scroll event with throttling for better performance
-  var scrollTimeout
+  // Throttled scroll event for better performance
+  let scrollTimeout
   $(window).on("scroll", () => {
-    // Clear the timeout if it exists
     if (scrollTimeout) {
       clearTimeout(scrollTimeout)
     }
 
-    // Set a new timeout
     scrollTimeout = setTimeout(() => {
       animateOnScroll()
-    }, 10) // Throttle to every 10ms for smooth performance
+    }, 10)
   })
 
-  // Run animation on page load
-  animateOnScroll()
+  // Run animation check on page load
+  setTimeout(() => {
+    animateOnScroll()
+  }, 100)
 
-  // Additional entrance animations for hero section
-  function heroAnimations() {
+  // Run animation check when page is fully loaded
+  $(window).on("load", () => {
     setTimeout(() => {
-      $(".greeting").addClass("slideInDown")
-    }, 500)
-
-    setTimeout(() => {
-      $(".name").addClass("zoomIn")
-    }, 800)
-
-    setTimeout(() => {
-      $(".rotating-text").addClass("fadeIn")
-    }, 1100)
-
-    setTimeout(() => {
-      $(".description").addClass("slideInUp")
-    }, 1400)
-
-    setTimeout(() => {
-      $(".cta-buttons").addClass("bounceInUp")
-    }, 1700)
-  }
-
-  // Run hero animations on page load
-  heroAnimations()
+      animateOnScroll()
+    }, 200)
+  })
 
   // Form submission with validation
   $("#contactForm").submit(function (e) {

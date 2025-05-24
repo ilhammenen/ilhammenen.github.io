@@ -10,10 +10,10 @@ $(document).ready(() => {
   if (typeof Typed !== "undefined") {
     new Typed(".text-rotate", {
       strings: [
-        "I build amazing Interfaces user experiences.",
+        "I build amazing web experiences.",
         "I create beautiful user interfaces.",
         "I develop modern applications.",
-        "I bring create ideas to life.",
+        "I bring ideas to life.",
       ],
       typeSpeed: 50,
       backSpeed: 30,
@@ -119,36 +119,126 @@ $(document).ready(() => {
     }
   })
 
-  // Animate elements when they come into view
+  // ========================================
+  // SCROLL DOWN ANIMATIONS - THIS IS WHERE THE MAGIC HAPPENS!
+  // ========================================
+
+  // Enhanced scroll animations with more options
   function animateOnScroll() {
+    // Animate section titles and subtitles
     $(".section-title, .section-subtitle, .underline").each(function () {
       var elementPosition = $(this).offset().top
       var topOfWindow = $(window).scrollTop()
       var windowHeight = $(window).height()
+      var triggerPoint = 100 // How many pixels before element comes into view
 
-      if (elementPosition < topOfWindow + windowHeight - 100) {
+      if (elementPosition < topOfWindow + windowHeight - triggerPoint) {
         $(this).addClass("animated")
       }
     })
 
+    // Animate content elements with staggered delays
     $(
       ".about-image, .about-text, .timeline-item, .cert-card, .project-card, .skill-card, .contact-info, .contact-form",
-    ).each(function () {
+    ).each(function (index) {
+      var elementPosition = $(this).offset().top
+      var topOfWindow = $(window).scrollTop()
+      var windowHeight = $(window).height()
+      var triggerPoint = 150 // Trigger animation 150px before element is visible
+
+      if (elementPosition < topOfWindow + windowHeight - triggerPoint) {
+        // Add staggered delay based on element index
+        var delay = index * 100 // 100ms delay between each element
+
+        setTimeout(() => {
+          $(this).addClass("fadeInUp")
+        }, delay)
+      }
+    })
+
+    // Animate individual list items with delays
+    $(".achievements ul li, .timeline-meta span").each(function (index) {
       var elementPosition = $(this).offset().top
       var topOfWindow = $(window).scrollTop()
       var windowHeight = $(window).height()
 
       if (elementPosition < topOfWindow + windowHeight - 100) {
-        $(this).addClass("fadeInUp")
+        setTimeout(() => {
+          $(this).addClass("slideInLeft")
+        }, index * 50) // 50ms delay between each item
+      }
+    })
+
+    // Animate tags with bounce effect
+    $(".tags span, .project-tags span, .skill-tags span").each(function (index) {
+      var elementPosition = $(this).offset().top
+      var topOfWindow = $(window).scrollTop()
+      var windowHeight = $(window).height()
+
+      if (elementPosition < topOfWindow + windowHeight - 50) {
+        setTimeout(() => {
+          $(this).addClass("bounceIn")
+        }, index * 30) // 30ms delay between each tag
+      }
+    })
+
+    // Animate progress bars or counters (if you want to add them)
+    $(".progress-bar").each(function () {
+      var elementPosition = $(this).offset().top
+      var topOfWindow = $(window).scrollTop()
+      var windowHeight = $(window).height()
+
+      if (elementPosition < topOfWindow + windowHeight - 100) {
+        var percentage = $(this).data("percentage") || 90
+        $(this)
+          .css("width", percentage + "%")
+          .addClass("animated")
       }
     })
   }
 
-  // Run animation on scroll
-  $(window).on("scroll", animateOnScroll)
+  // Enhanced scroll event with throttling for better performance
+  var scrollTimeout
+  $(window).on("scroll", () => {
+    // Clear the timeout if it exists
+    if (scrollTimeout) {
+      clearTimeout(scrollTimeout)
+    }
+
+    // Set a new timeout
+    scrollTimeout = setTimeout(() => {
+      animateOnScroll()
+    }, 10) // Throttle to every 10ms for smooth performance
+  })
 
   // Run animation on page load
   animateOnScroll()
+
+  // Additional entrance animations for hero section
+  function heroAnimations() {
+    setTimeout(() => {
+      $(".greeting").addClass("slideInDown")
+    }, 500)
+
+    setTimeout(() => {
+      $(".name").addClass("zoomIn")
+    }, 800)
+
+    setTimeout(() => {
+      $(".rotating-text").addClass("fadeIn")
+    }, 1100)
+
+    setTimeout(() => {
+      $(".description").addClass("slideInUp")
+    }, 1400)
+
+    setTimeout(() => {
+      $(".cta-buttons").addClass("bounceInUp")
+    }, 1700)
+  }
+
+  // Run hero animations on page load
+  heroAnimations()
 
   // Form submission with validation
   $("#contactForm").submit(function (e) {

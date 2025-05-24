@@ -10,10 +10,10 @@ $(document).ready(() => {
   if (typeof Typed !== "undefined") {
     new Typed(".text-rotate", {
       strings: [
-        "I build amazing web experiences.",
+        "I build amazing Interfaces user experiences.",
         "I create beautiful user interfaces.",
         "I develop modern applications.",
-        "I bring ideas to life.",
+        "I bring create ideas to life.",
       ],
       typeSpeed: 50,
       backSpeed: 30,

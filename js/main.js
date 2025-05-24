@@ -1,256 +1,357 @@
-// Standard browser-compatible JavaScript
-const $ = window.$ // Declare the $ variable
-const Typed = window.Typed // Declare the Typed variable
-
-$(document).ready(() => {
-  // Current year for copyright
-  $("#currentYear").text(new Date().getFullYear())
-
-  // Typed.js for rotating text (only if Typed is available)
-  if (typeof Typed !== "undefined") {
-    new Typed(".text-rotate", {
-      strings: [
-        "I build amazing web experiences.",
-        "I create beautiful user interfaces.",
-        "I develop modern applications.",
-        "I bring ideas to life.",
-      ],
-      typeSpeed: 50,
-      backSpeed: 30,
-      backDelay: 2000,
-      startDelay: 1000,
-      loop: true,
-    })
+// Standard browser-compatible JavaScript for Google Chrome
+;(() => {
+  // Wait for DOM to be ready
+  function ready(fn) {
+    if (document.readyState !== "loading") {
+      fn()
+    } else {
+      document.addEventListener("DOMContentLoaded", fn)
+    }
   }
 
-  // Mobile menu toggle - FIXED VERSION
-  $(".menu-toggle").on("click", function (e) {
-    e.preventDefault()
-    e.stopPropagation()
+  // Declare Typed variable if it's not available
+  const Typed = window.Typed
 
-    console.log("Menu button clicked!") // Debug log
-
-    const $navLinks = $(".nav-links")
-    const $icon = $(this).find("i")
-    const isActive = $navLinks.hasClass("active")
-
-    if (isActive) {
-      // Close menu
-      $navLinks.removeClass("active")
-      $(this).attr("aria-expanded", "false")
-      $icon.removeClass("fa-times").addClass("fa-bars")
-      $("body").removeClass("menu-open")
-    } else {
-      // Open menu
-      $navLinks.addClass("active")
-      $(this).attr("aria-expanded", "true")
-      $icon.removeClass("fa-bars").addClass("fa-times")
-      $("body").addClass("menu-open")
+  ready(() => {
+    // Current year for copyright
+    const currentYearElement = document.getElementById("currentYear")
+    if (currentYearElement) {
+      currentYearElement.textContent = new Date().getFullYear()
     }
-  })
 
-  // Close mobile menu when clicking outside
-  $(document).on("click", (e) => {
-    if (!$(e.target).closest(".navbar").length) {
-      $(".nav-links").removeClass("active")
-      $(".menu-toggle").attr("aria-expanded", "false")
-      $(".menu-toggle i").removeClass("fa-times").addClass("fa-bars")
-      $("body").removeClass("menu-open")
+    // Typed.js for rotating text (only if Typed is available)
+    if (typeof Typed !== "undefined") {
+      const textRotateElement = document.querySelector(".text-rotate")
+      if (textRotateElement) {
+        new Typed(".text-rotate", {
+          strings: [
+            "I build amazing web experiences.",
+            "I create beautiful user interfaces.",
+            "I develop modern applications.",
+            "I bring ideas to life.",
+          ],
+          typeSpeed: 50,
+          backSpeed: 30,
+          backDelay: 2000,
+          startDelay: 1000,
+          loop: true,
+        })
+      }
     }
-  })
 
-  // Close mobile menu when clicking on nav links
-  $(".nav-links a").on("click", () => {
-    $(".nav-links").removeClass("active")
-    $(".menu-toggle").attr("aria-expanded", "false")
-    $(".menu-toggle i").removeClass("fa-times").addClass("fa-bars")
-    $("body").removeClass("menu-open")
-  })
+    // Mobile menu toggle - Chrome compatible version
+    const menuToggle = document.querySelector(".menu-toggle")
+    const navLinks = document.querySelector(".nav-links")
 
-  // Smooth scrolling for navigation links
-  $('a[href^="#"]').on("click", function (e) {
-    e.preventDefault()
+    if (menuToggle && navLinks) {
+      menuToggle.addEventListener("click", function (e) {
+        e.preventDefault()
+        e.stopPropagation()
 
-    var target = this.hash
-    var $target = $(target)
+        console.log("Menu button clicked!") // Debug log
 
-    if ($target.length) {
-      // Update aria-current for navigation
-      $(".nav-links a").removeClass("active").removeAttr("aria-current")
-      $('.nav-links a[href="' + target + '"]')
-        .addClass("active")
-        .attr("aria-current", "page")
+        const icon = this.querySelector("i")
+        const isActive = navLinks.classList.contains("active")
 
-      $("html, body").animate(
-        {
-          scrollTop: $target.offset().top - 70,
-        },
-        800,
-        "swing",
-      )
+        if (isActive) {
+          // Close menu
+          navLinks.classList.remove("active")
+          this.setAttribute("aria-expanded", "false")
+          if (icon) {
+            icon.classList.remove("fa-times")
+            icon.classList.add("fa-bars")
+          }
+          document.body.classList.remove("menu-open")
+        } else {
+          // Open menu
+          navLinks.classList.add("active")
+          this.setAttribute("aria-expanded", "true")
+          if (icon) {
+            icon.classList.remove("fa-bars")
+            icon.classList.add("fa-times")
+          }
+          document.body.classList.add("menu-open")
+        }
+      })
     }
-  })
 
-  // Active navigation based on scroll position
-  $(window).on("scroll", function () {
-    var scrollPosition = $(this).scrollTop() + 100
-
-    // Highlight active nav item
-    $("section").each(function () {
-      var sectionTop = $(this).offset().top
-      var sectionHeight = $(this).outerHeight()
-      var sectionId = $(this).attr("id")
-
-      if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
-        $(".nav-links a").removeClass("active").removeAttr("aria-current")
-        $('.nav-links a[href="#' + sectionId + '"]')
-          .addClass("active")
-          .attr("aria-current", "page")
+    // Close mobile menu when clicking outside
+    document.addEventListener("click", (e) => {
+      if (!e.target.closest(".navbar")) {
+        if (navLinks) {
+          navLinks.classList.remove("active")
+        }
+        if (menuToggle) {
+          menuToggle.setAttribute("aria-expanded", "false")
+          const icon = menuToggle.querySelector("i")
+          if (icon) {
+            icon.classList.remove("fa-times")
+            icon.classList.add("fa-bars")
+          }
+        }
+        document.body.classList.remove("menu-open")
       }
     })
 
-    // Navbar background change on scroll
-    if (scrollPosition > 100) {
-      $(".navbar").css("background-color", "rgba(255, 255, 255, 0.95)")
-      $(".navbar").css("box-shadow", "0 2px 10px rgba(0, 0, 0, 0.1)")
-    } else {
-      $(".navbar").css("background-color", "rgba(255, 255, 255, 0.95)")
-      $(".navbar").css("box-shadow", "none")
-    }
-  })
+    // Close mobile menu when clicking on nav links
+    const navLinkElements = document.querySelectorAll(".nav-links a")
+    navLinkElements.forEach((link) => {
+      link.addEventListener("click", () => {
+        if (navLinks) {
+          navLinks.classList.remove("active")
+        }
+        if (menuToggle) {
+          menuToggle.setAttribute("aria-expanded", "false")
+          const icon = menuToggle.querySelector("i")
+          if (icon) {
+            icon.classList.remove("fa-times")
+            icon.classList.add("fa-bars")
+          }
+        }
+        document.body.classList.remove("menu-open")
+      })
+    })
 
-  // ========================================
-  // FIXED SCROLL ANIMATIONS - BOTTOM TO TOP
-  // ========================================
+    // Smooth scrolling for navigation links
+    const hashLinks = document.querySelectorAll('a[href^="#"]')
+    hashLinks.forEach((link) => {
+      link.addEventListener("click", function (e) {
+        e.preventDefault()
 
-  function isElementInViewport(element, offset = 100) {
-    const rect = element.getBoundingClientRect()
-    const windowHeight = window.innerHeight || document.documentElement.clientHeight
+        const target = this.getAttribute("href")
+        const targetElement = document.querySelector(target)
 
-    return rect.top <= windowHeight - offset && rect.bottom >= 0
-  }
+        if (targetElement) {
+          // Update aria-current for navigation
+          const allNavLinks = document.querySelectorAll(".nav-links a")
+          allNavLinks.forEach((navLink) => {
+            navLink.classList.remove("active")
+            navLink.removeAttribute("aria-current")
+          })
 
-  function animateOnScroll() {
-    // Elements to animate
-    const elementsToAnimate = [
-      ".section-header",
-      ".about-content .about-image",
-      ".about-content .about-text",
-      ".timeline-item",
-      ".cert-card",
-      ".project-card",
-      ".skill-card",
-      ".contact-info",
-      ".contact-form",
-    ]
+          const currentNavLink = document.querySelector('.nav-links a[href="' + target + '"]')
+          if (currentNavLink) {
+            currentNavLink.classList.add("active")
+            currentNavLink.setAttribute("aria-current", "page")
+          }
 
-    elementsToAnimate.forEach((selector) => {
-      $(selector).each(function (index) {
-        
-
-        if (isElementInViewport(this, 150)) {
-          // Add a small delay for staggered effect
-          setTimeout(() => {
-            $(this).addClass("animate")
-          }, index * 100) // 100ms delay between each element
+          // Smooth scroll
+          const targetPosition = targetElement.offsetTop - 70
+          window.scrollTo({
+            top: targetPosition,
+            behavior: "smooth",
+          })
         }
       })
     })
 
-    // Special handling for grids (projects, skills, certs)
-    $(".projects-grid .project-card").each(function (index) {
-      if (isElementInViewport(this, 150)) {
-        setTimeout(() => {
-          $(this).addClass("animate")
-        }, index * 150)
-      }
-    })
+    // Active navigation based on scroll position
+    function updateActiveNavigation() {
+      const scrollPosition = window.pageYOffset + 100
+      const sections = document.querySelectorAll("section")
 
-    $(".skills-grid .skill-card").each(function (index) {
-      if (isElementInViewport(this, 150)) {
-        setTimeout(() => {
-          $(this).addClass("animate")
-        }, index * 100)
-      }
-    })
+      sections.forEach((section) => {
+        const sectionTop = section.offsetTop
+        const sectionHeight = section.offsetHeight
+        const sectionId = section.getAttribute("id")
 
-    $(".cert-container .cert-card").each(function (index) {
-      if (isElementInViewport(this, 150)) {
-        setTimeout(() => {
-          $(this).addClass("animate")
-        }, index * 200)
-      }
-    })
-  }
+        if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+          const allNavLinks = document.querySelectorAll(".nav-links a")
+          allNavLinks.forEach((navLink) => {
+            navLink.classList.remove("active")
+            navLink.removeAttribute("aria-current")
+          })
 
-  // Throttled scroll event for better performance
-  let scrollTimeout
-  $(window).on("scroll", () => {
-    if (scrollTimeout) {
-      clearTimeout(scrollTimeout)
+          const activeNavLink = document.querySelector('.nav-links a[href="#' + sectionId + '"]')
+          if (activeNavLink) {
+            activeNavLink.classList.add("active")
+            activeNavLink.setAttribute("aria-current", "page")
+          }
+        }
+      })
+
+      // Navbar background change on scroll
+      const navbar = document.querySelector(".navbar")
+      if (navbar) {
+        if (scrollPosition > 100) {
+          navbar.style.backgroundColor = "rgba(255, 255, 255, 0.95)"
+          navbar.style.boxShadow = "0 2px 10px rgba(0, 0, 0, 0.1)"
+        } else {
+          navbar.style.backgroundColor = "rgba(255, 255, 255, 0.95)"
+          navbar.style.boxShadow = "none"
+        }
+      }
     }
 
-    scrollTimeout = setTimeout(() => {
-      animateOnScroll()
-    }, 10)
-  })
+    // ========================================
+    // SCROLL ANIMATIONS - CHROME COMPATIBLE
+    // ========================================
 
-  // Run animation check on page load
-  setTimeout(() => {
-    animateOnScroll()
-  }, 100)
+    function isElementInViewport(element, offset) {
+      if (!element) return false
 
-  // Run animation check when page is fully loaded
-  $(window).on("load", () => {
+      offset = offset || 100
+      const rect = element.getBoundingClientRect()
+      const windowHeight = window.innerHeight || document.documentElement.clientHeight
+
+      return rect.top <= windowHeight - offset && rect.bottom >= 0
+    }
+
+    function animateOnScroll() {
+      // Elements to animate
+      const elementsToAnimate = [
+        ".section-header",
+        ".about-content .about-image",
+        ".about-content .about-text",
+        ".timeline-item",
+        ".cert-card",
+        ".project-card",
+        ".skill-card",
+        ".contact-info",
+        ".contact-form",
+      ]
+
+      elementsToAnimate.forEach((selector) => {
+        const elements = document.querySelectorAll(selector)
+        elements.forEach((element, index) => {
+          if (isElementInViewport(element, 150)) {
+            // Add a small delay for staggered effect
+            setTimeout(() => {
+              element.classList.add("animate")
+            }, index * 100) // 100ms delay between each element
+          }
+        })
+      })
+
+      // Special handling for grids (projects, skills, certs)
+      const projectCards = document.querySelectorAll(".projects-grid .project-card")
+      projectCards.forEach((card, index) => {
+        if (isElementInViewport(card, 150)) {
+          setTimeout(() => {
+            card.classList.add("animate")
+          }, index * 150)
+        }
+      })
+
+      const skillCards = document.querySelectorAll(".skills-grid .skill-card")
+      skillCards.forEach((card, index) => {
+        if (isElementInViewport(card, 150)) {
+          setTimeout(() => {
+            card.classList.add("animate")
+          }, index * 100)
+        }
+      })
+
+      const certCards = document.querySelectorAll(".cert-container .cert-card")
+      certCards.forEach((card, index) => {
+        if (isElementInViewport(card, 150)) {
+          setTimeout(() => {
+            card.classList.add("animate")
+          }, index * 200)
+        }
+      })
+    }
+
+    // Throttled scroll event for better performance
+    let scrollTimeout
+    function handleScroll() {
+      if (scrollTimeout) {
+        clearTimeout(scrollTimeout)
+      }
+
+      scrollTimeout = setTimeout(() => {
+        updateActiveNavigation()
+        animateOnScroll()
+      }, 10)
+    }
+
+    // Add scroll event listener
+    window.addEventListener("scroll", handleScroll)
+
+    // Run animation check on page load
     setTimeout(() => {
       animateOnScroll()
-    }, 200)
+    }, 100)
+
+    // Run animation check when page is fully loaded
+    window.addEventListener("load", () => {
+      setTimeout(() => {
+        animateOnScroll()
+      }, 200)
+    })
+
+    // Form submission with validation
+    const contactForm = document.getElementById("contactForm")
+    if (contactForm) {
+      contactForm.addEventListener("submit", (e) => {
+        e.preventDefault()
+
+        // Get form values
+        const nameInput = document.getElementById("name")
+        const emailInput = document.getElementById("email")
+        const messageInput = document.getElementById("message")
+
+        const name = nameInput ? nameInput.value : ""
+        const email = emailInput ? emailInput.value : ""
+        const message = messageInput ? messageInput.value : ""
+
+        // Basic validation
+        let isValid = true
+        let errorMessage = ""
+
+        if (!name.trim()) {
+          isValid = false
+          errorMessage += "Name is required. "
+          if (nameInput) {
+            nameInput.setAttribute("aria-invalid", "true")
+            nameInput.focus()
+          }
+        } else {
+          if (nameInput) {
+            nameInput.setAttribute("aria-invalid", "false")
+          }
+        }
+
+        if (!email.trim() || !email.includes("@")) {
+          isValid = false
+          errorMessage += "Valid email is required. "
+          if (emailInput) {
+            emailInput.setAttribute("aria-invalid", "true")
+            if (isValid) emailInput.focus() // Only focus if it's the first error
+          }
+        } else {
+          if (emailInput) {
+            emailInput.setAttribute("aria-invalid", "false")
+          }
+        }
+
+        if (!message.trim()) {
+          isValid = false
+          errorMessage += "Message is required."
+          if (messageInput) {
+            messageInput.setAttribute("aria-invalid", "true")
+            if (isValid) messageInput.focus() // Only focus if it's the first error
+          }
+        } else {
+          if (messageInput) {
+            messageInput.setAttribute("aria-invalid", "false")
+          }
+        }
+
+        // If valid, submit the form (or show success message)
+        if (isValid) {
+          alert("Thanks for your message, " + name + "! I'll get back to you soon.")
+          contactForm.reset()
+          if (nameInput) nameInput.setAttribute("aria-invalid", "false")
+          if (emailInput) emailInput.setAttribute("aria-invalid", "false")
+          if (messageInput) messageInput.setAttribute("aria-invalid", "false")
+        } else {
+          alert("Please correct the following errors: " + errorMessage)
+        }
+      })
+    }
+
+    // Initialize animations on load
+    updateActiveNavigation()
   })
-
-  // Form submission with validation
-  $("#contactForm").submit(function (e) {
-    e.preventDefault()
-
-    // Get form values
-    var name = $("#name").val()
-    var email = $("#email").val()
-    var message = $("#message").val()
-
-    // Basic validation
-    var isValid = true
-    var errorMessage = ""
-
-    if (!name.trim()) {
-      isValid = false
-      errorMessage += "Name is required. "
-      $("#name").attr("aria-invalid", "true").focus()
-    } else {
-      $("#name").attr("aria-invalid", "false")
-    }
-
-    if (!email.trim() || !email.includes("@")) {
-      isValid = false
-      errorMessage += "Valid email is required. "
-      $("#email").attr("aria-invalid", "true").focus()
-    } else {
-      $("#email").attr("aria-invalid", "false")
-    }
-
-    if (!message.trim()) {
-      isValid = false
-      errorMessage += "Message is required."
-      $("#message").attr("aria-invalid", "true").focus()
-    } else {
-      $("#message").attr("aria-invalid", "false")
-    }
-
-    // If valid, submit the form (or show success message)
-    if (isValid) {
-      alert("Thanks for your message, " + name + "! I'll get back to you soon.")
-      this.reset()
-      $("#name, #email, #message").attr("aria-invalid", "false")
-    } else {
-      alert("Please correct the following errors: " + errorMessage)
-    }
-  })
-})
+})()

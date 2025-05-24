@@ -1,4 +1,4 @@
-// Standard browser-compatible JavaScript for Google Chrome
+// Standard browser-compatible JavaScript for Google Chrome with Theme Support
 ;(() => {
   // Wait for DOM to be ready
   function ready(fn) {
@@ -9,14 +9,56 @@
     }
   }
 
+  // Theme Management
+  function initTheme() {
+    // Get saved theme from localStorage or default to light
+    const savedTheme = localStorage.getItem("portfolio-theme") || "light"
+    document.documentElement.setAttribute("data-theme", savedTheme)
+    updateThemeIcon(savedTheme)
+  }
+
+  function toggleTheme() {
+    const currentTheme = document.documentElement.getAttribute("data-theme")
+    const newTheme = currentTheme === "dark" ? "light" : "dark"
+
+    document.documentElement.setAttribute("data-theme", newTheme)
+    localStorage.setItem("portfolio-theme", newTheme)
+    updateThemeIcon(newTheme)
+  }
+
+  function updateThemeIcon(theme) {
+    const themeToggle = document.querySelector(".theme-toggle")
+    if (themeToggle) {
+      const icon = themeToggle.querySelector("i")
+      if (icon) {
+        if (theme === "dark") {
+          icon.className = "fas fa-sun"
+          themeToggle.setAttribute("aria-label", "Switch to light mode")
+        } else {
+          icon.className = "fas fa-moon"
+          themeToggle.setAttribute("aria-label", "Switch to dark mode")
+        }
+      }
+    }
+  }
+
   // Declare Typed variable if it's not available
   const Typed = window.Typed
 
   ready(() => {
+    // Initialize theme
+    initTheme()
+
     // Current year for copyright
     const currentYearElement = document.getElementById("currentYear")
     if (currentYearElement) {
       currentYearElement.textContent = new Date().getFullYear()
+    }
+
+    // Theme toggle functionality
+    const themeToggle = document.querySelector(".theme-toggle")
+    if (themeToggle) {
+      themeToggle.addEventListener("click", toggleTheme)
     }
 
     // Typed.js for rotating text (only if Typed is available)
@@ -39,7 +81,7 @@
       }
     }
 
-    // Mobile menu toggle - Chrome compatible version
+    // Mobile menu toggle
     const menuToggle = document.querySelector(".menu-toggle")
     const navLinks = document.querySelector(".nav-links")
 
@@ -47,8 +89,6 @@
       menuToggle.addEventListener("click", function (e) {
         e.preventDefault()
         e.stopPropagation()
-
-        console.log("Menu button clicked!") // Debug log
 
         const icon = this.querySelector("i")
         const isActive = navLinks.classList.contains("active")
@@ -174,19 +214,14 @@
       const navbar = document.querySelector(".navbar")
       if (navbar) {
         if (scrollPosition > 100) {
-          navbar.style.backgroundColor = "rgba(255, 255, 255, 0.95)"
-          navbar.style.boxShadow = "0 2px 10px rgba(0, 0, 0, 0.1)"
+          navbar.style.boxShadow = "var(--navbar-shadow)"
         } else {
-          navbar.style.backgroundColor = "rgba(255, 255, 255, 0.95)"
-          navbar.style.boxShadow = "none"
+          navbar.style.boxShadow = "var(--navbar-shadow)"
         }
       }
     }
 
-    // ========================================
-    // SCROLL ANIMATIONS - CHROME COMPATIBLE
-    // ========================================
-
+    // Scroll animations
     function isElementInViewport(element, offset) {
       if (!element) return false
 
@@ -218,12 +253,12 @@
             // Add a small delay for staggered effect
             setTimeout(() => {
               element.classList.add("animate")
-            }, index * 100) // 100ms delay between each element
+            }, index * 100)
           }
         })
       })
 
-      // Special handling for grids (projects, skills, certs)
+      // Special handling for grids
       const projectCards = document.querySelectorAll(".projects-grid .project-card")
       projectCards.forEach((card, index) => {
         if (isElementInViewport(card, 150)) {
@@ -252,7 +287,7 @@
       })
     }
 
-    // Throttled scroll event for better performance
+    // Throttled scroll event
     let scrollTimeout
     function handleScroll() {
       if (scrollTimeout) {
@@ -317,7 +352,7 @@
           errorMessage += "Valid email is required. "
           if (emailInput) {
             emailInput.setAttribute("aria-invalid", "true")
-            if (isValid) emailInput.focus() // Only focus if it's the first error
+            if (isValid) emailInput.focus()
           }
         } else {
           if (emailInput) {
@@ -330,7 +365,7 @@
           errorMessage += "Message is required."
           if (messageInput) {
             messageInput.setAttribute("aria-invalid", "true")
-            if (isValid) messageInput.focus() // Only focus if it's the first error
+            if (isValid) messageInput.focus()
           }
         } else {
           if (messageInput) {
@@ -338,7 +373,7 @@
           }
         }
 
-        // If valid, submit the form (or show success message)
+        // If valid, submit the form
         if (isValid) {
           alert("Thanks for your message, " + name + "! I'll get back to you soon.")
           contactForm.reset()
